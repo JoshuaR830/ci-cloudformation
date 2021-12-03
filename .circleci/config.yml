@@ -9,7 +9,11 @@ jobs:
       image: ubuntu-1604:202004-01
     steps:
       - checkout
-      - run: dotnet build src/ci-cloudformation/ --configuration Release && zip -r dist.zip src/ci-cloudformation/bin/Release/netcoreapp3.1
+      - run:
+          name: release
+          command: |
+           dotnet build src/ci-cloudformation/ --configuration Release
+           zip -r dist.zip src/ci-cloudformation/bin/Release/netcoreapp3.1
       - aws-s3/sync:
           aws-access-key-id:
           aws-region:
