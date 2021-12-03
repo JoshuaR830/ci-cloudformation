@@ -1,0 +1,23 @@
+version 2.1
+
+orbs:
+  aws-s3: circleci/aws-s3@3.0.0
+
+jobs:
+  build:
+    machine:
+      image: ubuntu-1604:202004-01
+    steps:
+      - checkout
+      - run: dotnet build src/ci-cloudformation/ --configuration Release && zip -r dist.zip src/ci-cloudformation/bin/Release/netcoreapp3.1
+      - aws-s3/sync:
+          aws-access-key-id:
+          aws-region:
+          aws-secret-access-key:
+          from: dist.zip
+          to: 's3://practicing-serverless-bucket/serverlessfunction'
+
+workflows:
+  s3-upload:
+    jobs:
+      - build

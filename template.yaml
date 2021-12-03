@@ -1,0 +1,27 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: "AWS::Serverless-2016-10-31" # Macro hosted by cloudformation - allows AWS SAM syntax to be used - turns it into a compliant cloud formation template
+
+# And that friends is why you would use the SAM syntax - many fewer lines to do the same thing
+# https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/transform-aws-serverless.html
+# An extension of Cloudformation templates that make them easier to work with
+
+
+# Deploy lambda
+# - Create zip for lambda
+# - Upload to S3
+# - Set to active
+
+Resources:
+  S3BucketForServerless:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: practicing-serverless-bucket
+
+  ServerlessFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: ci-cloudformation::ci_cloudformation.Functions::Get
+      Runtime: dotnetcore3.1
+      CodeUri: 
+        Bucket: !Ref S3BucketForServerless
+        Key: /serverlessfunction
